@@ -1,6 +1,4 @@
 ﻿using Common.Constants;
-using Common.Enums;
-using ToDoApp.Models.Users;
 
 namespace DAL.Data
 {
@@ -10,17 +8,7 @@ namespace DAL.Data
         {
             ToDoAppDbContext _dbContext = new ToDoAppDbContext();
 
-            if (_dbContext.Database.EnsureCreated())
-            {
-                _dbContext.Users.Add(new User
-                {
-                    Username = Constants.InitialLoginUsername,
-                    Password = Constants.InitialLoginPassword,
-                    Role = UserRolesEnum.admin.ToString()
-                });
-
-                _dbContext.SaveChanges();
-            }
-        }
+            if (_dbContext.Database.EnsureCreated()) { }
+         }
     }
 }

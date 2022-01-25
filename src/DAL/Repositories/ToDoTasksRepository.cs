@@ -1,5 +1,4 @@
-﻿using DAL.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -32,13 +31,6 @@ namespace DAL.Data
 
         public async Task DeleteToDoTask(int taskId)
         {
-            var tasksAssignedToRemove = await UsersToDoTasks.Where(ut => ut.ToDoTaskId == taskId).ToListAsync();
-
-            foreach (var item in tasksAssignedToRemove)
-            {
-                UsersToDoTasks.Remove(item);
-            }
-
             var taskToDelete = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             ToDoTasks.Remove(taskToDelete);
@@ -46,12 +38,12 @@ namespace DAL.Data
             SaveChanges();
         }
 
-        public async Task AssignToDoTask(int taskId, int userId)
-        {
-            await UsersToDoTasks.Add(new UserToDoTask { ToDoTaskId = taskId, UserId = userId }).ReloadAsync();
+        //public async Task AssignToDoTask(int taskId, int userId)
+        //{
+            //await UsersToDoTasks.Add(new UserToDoTask { ToDoTaskId = taskId, UserId = userId }).ReloadAsync();
 
-            SaveChanges();
-        }
+            //SaveChanges();
+        //}
 
         public async Task CompleteToDoTask(int taskId)
         {
@@ -62,24 +54,14 @@ namespace DAL.Data
             SaveChanges();
         }
 
-        public Task<List<ToDoTask>> GetToDoTasks(int toDoListId)
+        public async Task<ToDoTask> GetToDoTaskById(int taskId)
         {
-            return ToDoTasks.Where(t => t.ToDoListId == toDoListId).ToListAsync();
+            return await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
         }
 
-        public Task<ToDoTask> GetToDoTaskById(int taskId)
+        public async Task<ToDoTask> GetToDoTaskByTitle(string title)
         {
-            return ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
-        }
-
-        public Task<ToDoTask> GetToDoTaskByTitle(string title, int toDoListId)
-        {
-            return ToDoTasks.FirstOrDefaultAsync(t => t.Title == title && t.ToDoListId == toDoListId);
-        }
-
-        public Task<List<int>> UsersSharedToToDoList(int toDoListId)
-        {
-            return UsersToDoLists.Where(ul => ul.ToDoListId == toDoListId).Select(ul => ul.UserId).ToListAsync();
+            return await ToDoTasks.FirstOrDefaultAsync(t => t.Title == title);
         }
     }
 }

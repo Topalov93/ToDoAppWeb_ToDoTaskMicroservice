@@ -1,19 +1,13 @@
-﻿using DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using ToDoApp.Models.Users;
 
 namespace ToDoApp.Models
 {
     public class ToDoTask
     {
         public int Id { get; set; }
-
-        public int ToDoListId { get; set; }
-
-        public virtual ToDoList ToDoList { get; set; }
 
         [Required]
         [MaxLength(150)]
@@ -31,20 +25,19 @@ namespace ToDoApp.Models
 
         public int UserId { get; set; }
 
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
 
         public DateTime? EditedOn { get; set; }
 
         public int? EditedBy { get; set; }
 
-        public virtual ICollection<UserToDoTask> AssignedUsers { get; set; }
+        //public virtual ICollection<UserToDoTask> AssignedUsers { get; set; }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"Id: {Id}");
-            sb.AppendLine($"ToDo List Id: {ToDoListId}");
             sb.AppendLine($"Title: {Title}");
             sb.AppendLine($"Description: {Description}");
             sb.AppendLine($"Is Completed: {IsCompleted}");

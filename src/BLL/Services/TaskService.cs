@@ -16,9 +16,9 @@ namespace ToDoApp.Services.TaskService
             _toDoTaskRepository = toDoTaskRepository;
         }
 
-        public async Task<ResultState> CreateTask(ToDoTask newToDoTask, int currentUserId)
+        public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskByTitle(newToDoTask.Title, newToDoTask.ToDoListId);
+            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskByTitle(newToDoTask.Title);
 
             if (toDoTask is not null)
             {
@@ -26,7 +26,6 @@ namespace ToDoApp.Services.TaskService
             }
 
             newToDoTask.IsCompleted = false;
-            newToDoTask.UserId = currentUserId;
 
             try
             {
@@ -59,7 +58,7 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> EditTask(int taskId, ToDoTask newInfoHolderToDoTask, int currentUserId)
+        public async Task<ResultState> EditTask(int taskId, ToDoTask newInfoHolderToDoTask)
         {
             ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
 
@@ -68,7 +67,6 @@ namespace ToDoApp.Services.TaskService
                 return new ResultState(false, Messages.ToDoTaskDoesntExist);
             }
 
-            newInfoHolderToDoTask.EditedBy = currentUserId;
             newInfoHolderToDoTask.EditedOn = DateTime.UtcNow;
 
             try
@@ -82,32 +80,25 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> AssignTask(int taskId, ToDoList toDoList, int userId, int currentUserId)
-        {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+        //public async Task<ResultState> AssignTask(int taskId, int userId)
+        //{
+        //    ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
 
-            if (toDoTask is null)
-            {
-                return new ResultState(false, Messages.ToDoTaskDoesntExist);
-            }
+        //    if (toDoTask is null)
+        //    {
+        //        return new ResultState(false, Messages.ToDoTaskDoesntExist);
+        //    }
 
-            List<int> usersSharedToToDoList = await _toDoTaskRepository.UsersSharedToToDoList(toDoList.Id);
-
-            if (userId == toDoList.UserId || usersSharedToToDoList.Contains(userId))
-            {
-                try
-                {
-                    await _toDoTaskRepository.AssignToDoTask(taskId, userId);
-                    return new ResultState(true, Messages.ToDoTaskAssignedSuccessful);
-                }
-                catch (Exception ex)
-                {
-                    return new ResultState(false, Messages.UnableToAssignToDoTask, ex);
-                }
-            }
-
-            return new ResultState(false, Messages.UserDontHaveAccessOrDoestExist);
-        }
+        //    try
+        //    {
+        //        await _toDoTaskRepository.AssignToDoTask(taskId, userId);
+        //        return new ResultState(true, Messages.ToDoTaskAssignedSuccessful);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResultState(false, Messages.UnableToAssignToDoTask, ex);
+        //    }
+        //}
 
         public async Task<ResultState> CompleteTask(int taskId)
         {
@@ -134,9 +125,14 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<List<ToDoTask>> ListToDoTasks(int toDoListId)
+        public async Task<ToDoTask> GetTaskByTitle(string title)
         {
-            return await _toDoTaskRepository.GetToDoTasks(toDoListId);
+            return await _toDoTaskRepository.GetToDoTaskByTitle(title);
+        }
+
+        public async Task<ToDoTask> GetTaskById(int taskId)
+        {
+            return await _toDoTaskRepository.GetToDoTaskById(taskId);
         }
     }
 }
