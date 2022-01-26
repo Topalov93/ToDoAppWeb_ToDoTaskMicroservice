@@ -125,22 +125,20 @@ namespace ToDoAppWeb.Controllers
             }
         }
 
-        //[HttpPut]
-        //[Route("{toDoTaskId}/assign/user/{userId}")]
-        //public async Task<ActionResult<ToDoTaskResponseDTO>> AssignTask(int toDoTaskId, int userId)
-        //{
-        //    var toDoList = await _toDoListService.GetToDoListByToDoTaskId(toDoTaskId);
+        [HttpPut]
+        [Route("{toDoTaskId}/assign/user/{userId}")]
+        public async Task<ActionResult<ToDoTaskResponseDTO>> AssignTask(int toDoTaskId, int userId)
+        {
+            var resultState = await _toDoTaskService.AssignTask(toDoTaskId, userId);
 
-        //    var resultState = await _toDoTaskService.AssignTask(toDoTaskId, toDoList, userId, currentUser.Id);
-
-        //    if (resultState.IsSuccessful)
-        //    {
-        //        return Ok(resultState.Message);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(resultState.Message);
-        //    }
-        //}
+            if (resultState.IsSuccessful)
+            {
+                return Ok(resultState.Message);
+            }
+            else
+            {
+                return BadRequest(resultState.Message);
+            }
+        }
     }
 }

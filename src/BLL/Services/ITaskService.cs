@@ -13,15 +13,14 @@ namespace ToDoApp.Services.TaskService
 
         public Task<ResultState> EditTask(int taskId, ToDoTask newInfoHolderToDoTask);
 
-        //public Task<ResultState> AssignTask(int taskId, ToDoList toDoList, int userId, int currentUserId);
+        public Task<ResultState> AssignTask(int taskId, int userId);
 
         public Task<ResultState> CompleteTask(int taskId);
-
-        //public Task<List<ToDoTask>> ListToDoTasks();
 
         public Task<ToDoTask> GetTaskByTitle(string title);
 
         public Task<ToDoTask> GetTaskById(int taskId);
 
+        public Task<List<ToDoTask>> GetTaskByUserId(int userId);
     }
 }

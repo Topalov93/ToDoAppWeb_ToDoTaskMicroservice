@@ -80,25 +80,25 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        //public async Task<ResultState> AssignTask(int taskId, int userId)
-        //{
-        //    ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+        public async Task<ResultState> AssignTask(int taskId, int userId)
+        {
+            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
 
-        //    if (toDoTask is null)
-        //    {
-        //        return new ResultState(false, Messages.ToDoTaskDoesntExist);
-        //    }
+            if (toDoTask is null)
+            {
+                return new ResultState(false, Messages.ToDoTaskDoesntExist);
+            }
 
-        //    try
-        //    {
-        //        await _toDoTaskRepository.AssignToDoTask(taskId, userId);
-        //        return new ResultState(true, Messages.ToDoTaskAssignedSuccessful);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ResultState(false, Messages.UnableToAssignToDoTask, ex);
-        //    }
-        //}
+            try
+            {
+                await _toDoTaskRepository.AssignToDoTask(taskId, userId);
+                return new ResultState(true, Messages.ToDoTaskAssignedSuccessful);
+            }
+            catch (Exception ex)
+            {
+                return new ResultState(false, Messages.UnableToAssignToDoTask, ex);
+            }
+        }
 
         public async Task<ResultState> CompleteTask(int taskId)
         {
@@ -134,5 +134,11 @@ namespace ToDoApp.Services.TaskService
         {
             return await _toDoTaskRepository.GetToDoTaskById(taskId);
         }
+
+        public async Task<List<ToDoTask>> GetTaskByUserId(int userId)
+        {
+            return await _toDoTaskRepository.GetToDoTaskByUserId(userId);
+        }
+
     }
 }

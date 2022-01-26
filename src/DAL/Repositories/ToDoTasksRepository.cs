@@ -38,18 +38,20 @@ namespace DAL.Data
             SaveChanges();
         }
 
-        //public async Task AssignToDoTask(int taskId, int userId)
-        //{
-            //await UsersToDoTasks.Add(new UserToDoTask { ToDoTaskId = taskId, UserId = userId }).ReloadAsync();
+        public async Task AssignToDoTask(int taskId, int userId)
+        {
+            var taskToAssign = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
-            //SaveChanges();
-        //}
+            taskToAssign.UserId = userId;
+
+            SaveChanges();
+        }
 
         public async Task CompleteToDoTask(int taskId)
         {
-            ToDoTask toDoTask = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            ToDoTask toDoTaskTocomplete = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
-            toDoTask.IsCompleted = true;
+            toDoTaskTocomplete.IsCompleted = true;
 
             SaveChanges();
         }
@@ -62,6 +64,11 @@ namespace DAL.Data
         public async Task<ToDoTask> GetToDoTaskByTitle(string title)
         {
             return await ToDoTasks.FirstOrDefaultAsync(t => t.Title == title);
+        }
+
+        public async Task<List<ToDoTask>> GetToDoTaskByUserId(int userId)
+        {
+            return await ToDoTasks.Where(x => x.UserId == userId).ToListAsync();
         }
     }
 }
