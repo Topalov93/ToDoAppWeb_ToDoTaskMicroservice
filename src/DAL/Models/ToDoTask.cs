@@ -25,7 +25,11 @@ namespace ToDoApp.Models
 
         public int UserId { get; set; }
 
-        //public virtual User User { get; set; }
+        public string? UserUsername { get; set; }
+
+        public string? UserFirstname { get; set; }
+
+        public string? UserLastname { get; set; }
 
         public DateTime? EditedOn { get; set; }
 

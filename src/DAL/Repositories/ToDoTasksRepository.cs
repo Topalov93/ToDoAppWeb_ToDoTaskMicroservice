@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,17 +10,24 @@ using ToDoApp.Models;
 
 namespace DAL.Data
 {
-    public class ToDoTasksRepository : ToDoAppDbContext
+    public class ToDoTasksRepository : IToDoTaskRepository
     {
+        private ToDoAppDbContext _context;
+
+        public ToDoTasksRepository(ToDoAppDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task CreateToDoTask(ToDoTask newToDoTask)
         {
-            await ToDoTasks.Add(newToDoTask).ReloadAsync();
-            SaveChanges();
+            await _context.ToDoTasks.Add(newToDoTask).ReloadAsync();
+            _context.SaveChanges();
         }
 
         public async Task EditToDoTask(int taskId, ToDoTask newInfoHolderToDoTask)
         {
-            ToDoTask toDoTask = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            ToDoTask toDoTask = await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             toDoTask.Title = newInfoHolderToDoTask.Title;
             toDoTask.Description = newInfoHolderToDoTask.Description;
@@ -26,49 +35,62 @@ namespace DAL.Data
             toDoTask.EditedBy = newInfoHolderToDoTask.EditedBy;
             toDoTask.EditedOn = newInfoHolderToDoTask.EditedOn;
 
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         public async Task DeleteToDoTask(int taskId)
         {
-            var taskToDelete = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            var taskToDelete = await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
-            ToDoTasks.Remove(taskToDelete);
+            _context.ToDoTasks.Remove(taskToDelete);
 
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         public async Task AssignToDoTask(int taskId, int userId)
         {
-            var taskToAssign = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            var taskToAssign = await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             taskToAssign.UserId = userId;
 
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         public async Task CompleteToDoTask(int taskId)
         {
-            ToDoTask toDoTaskTocomplete = await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            ToDoTask toDoTaskTocomplete = await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             toDoTaskTocomplete.IsCompleted = true;
 
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         public async Task<ToDoTask> GetToDoTaskById(int taskId)
         {
-            return await ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            return await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Id == taskId);
         }
 
         public async Task<ToDoTask> GetToDoTaskByTitle(string title)
         {
-            return await ToDoTasks.FirstOrDefaultAsync(t => t.Title == title);
+            return await _context.ToDoTasks.FirstOrDefaultAsync(t => t.Title == title);
         }
 
         public async Task<List<ToDoTask>> GetToDoTaskByUserId(int userId)
         {
-            return await ToDoTasks.Where(x => x.UserId == userId).ToListAsync();
+            return await _context.ToDoTasks.Where(x => x.UserId == userId).ToListAsync();
+        }
+
+        public void EditToDoTaskUserInfo(List<ToDoTask> tasksToEdit, User newInfoHolderUser)
+        {
+            foreach (var toDoTask in tasksToEdit)
+            {
+                toDoTask.UserId = newInfoHolderUser.Id;
+                toDoTask.UserUsername = newInfoHolderUser.Username;
+                toDoTask.UserFirstname = newInfoHolderUser.FirstName;
+                toDoTask.UserLastname = newInfoHolderUser.LastName;
+            }
+
+            _context.SaveChanges();
         }
     }
 }

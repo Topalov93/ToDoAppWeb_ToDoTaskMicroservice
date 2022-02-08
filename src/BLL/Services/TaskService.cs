@@ -1,5 +1,7 @@
 ﻿using Common;
 using DAL.Data;
+using DAL.Models;
+using DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,11 +11,11 @@ namespace ToDoApp.Services.TaskService
 {
     public class TaskService : ITaskService
     {
-        private readonly ToDoTasksRepository _toDoTaskRepository;
+        private readonly IToDoTaskRepository _toDoTaskRepository;
 
-        public TaskService(ToDoTasksRepository toDoTaskRepository)
+        public TaskService(IToDoTaskRepository toDoTasksRepository)
         {
-            _toDoTaskRepository = toDoTaskRepository;
+            _toDoTaskRepository = toDoTasksRepository;
         }
 
         public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
@@ -139,6 +141,27 @@ namespace ToDoApp.Services.TaskService
         {
             return await _toDoTaskRepository.GetToDoTaskByUserId(userId);
         }
+
+        public async Task<ResultState> EditTaskUser(User newInfoHolderUser)
+        {
+            List<ToDoTask> toDoTasksToEdit = await _toDoTaskRepository.GetToDoTaskByUserId(newInfoHolderUser.Id);
+
+            if (toDoTasksToEdit.Count==0)
+            {
+                return new ResultState(false, Messages.ToDoTaskDoesntExist);
+            }
+
+            try
+            {
+                _toDoTaskRepository.EditToDoTaskUserInfo(toDoTasksToEdit, newInfoHolderUser);
+                return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
+            }
+            catch (Exception ex)
+            {
+                return new ResultState(false, Messages.UnableToEditToDoTask, ex);
+            }
+        }
+
 
     }
 }

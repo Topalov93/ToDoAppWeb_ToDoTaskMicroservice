@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoAppWeb", "ToDoAppWeb\To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Models", "ToDoApp.Models\ToDoApp.Models.csproj", "{FEE6C2EE-AB9A-4055-B21E-E77F999D2AF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoTask_Message_Recieve", "ToDoTask_Message_Recieve\ToDoTask_Message_Recieve.csproj", "{9E5F1B9D-594D-4379-9736-4EE2F769B661}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FEE6C2EE-AB9A-4055-B21E-E77F999D2AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEE6C2EE-AB9A-4055-B21E-E77F999D2AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEE6C2EE-AB9A-4055-B21E-E77F999D2AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E5F1B9D-594D-4379-9736-4EE2F769B661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E5F1B9D-594D-4379-9736-4EE2F769B661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E5F1B9D-594D-4379-9736-4EE2F769B661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E5F1B9D-594D-4379-9736-4EE2F769B661}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

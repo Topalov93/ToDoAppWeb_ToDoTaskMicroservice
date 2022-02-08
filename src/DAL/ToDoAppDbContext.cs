@@ -5,7 +5,10 @@ namespace DAL.Data
 {
     public class ToDoAppDbContext : DbContext
     {
-        private const string _connectionString = "Data Source = .;Initial Catalog = ToDoAppdbWeb_ToDoTaskMicroservice;Integrated Security = True;TrustServerCertificate = False;";
+        public ToDoAppDbContext(DbContextOptions<ToDoAppDbContext> options) : base(options)
+        {
+            
+        }
 
         public ToDoAppDbContext()
         {
@@ -16,15 +19,8 @@ namespace DAL.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder
-                    .UseSqlServer(_connectionString);
-
-                optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(_connectionString);
-            }
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

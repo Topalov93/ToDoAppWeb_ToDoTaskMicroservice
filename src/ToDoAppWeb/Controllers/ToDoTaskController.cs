@@ -13,11 +13,11 @@ namespace ToDoAppWeb.Controllers
     [ApiController]
     public class ToDoTaskController : ControllerBase
     {
-        public TaskService _toDoTaskService;
+        public ITaskService _toDoTaskService;
 
-        public ToDoTaskController() : base()
+        public ToDoTaskController(ITaskService taskService) : base()
         {
-            _toDoTaskService = new TaskService(new ToDoTasksRepository());
+            _toDoTaskService = taskService;
         }
 
         [HttpGet]
@@ -39,6 +39,9 @@ namespace ToDoAppWeb.Controllers
                 IsCompleted = toDoTask.IsCompleted,
                 AddedOn = toDoTask.AddedOn,
                 UserId = toDoTask.UserId,
+                UserUsername = toDoTask.UserUsername,
+                UserFirstname = toDoTask.UserFirstname,
+                UserLastname = toDoTask.UserLastname,
                 EditedOn = toDoTask.EditedOn,
                 EditedBy = toDoTask.EditedBy
             };
@@ -68,7 +71,11 @@ namespace ToDoAppWeb.Controllers
             ToDoTask toDoTaskToAdd = new ToDoTask
             {
                 Title = toDoTask.Title,
-                Description = toDoTask.Description
+                Description = toDoTask.Description,
+                UserId = toDoTask.UserId,
+                UserUsername = toDoTask.UserUsername,
+                UserFirstname = toDoTask.UserFirstname,
+                UserLastname = toDoTask.UserLastname
             };
 
             var resultState = await _toDoTaskService.CreateTask(toDoTaskToAdd);
