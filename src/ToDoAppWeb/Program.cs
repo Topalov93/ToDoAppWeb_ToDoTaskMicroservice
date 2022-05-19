@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ToDoAppWeb_ToDoListMicroservice
+namespace ToDoAppWeb
 {
     public class Program
     {
