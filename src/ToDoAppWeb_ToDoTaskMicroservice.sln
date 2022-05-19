@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoAppWeb", "ToDoAppWeb\To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoApp.Models", "ToDoApp.Models\ToDoApp.Models.csproj", "{FEE6C2EE-AB9A-4055-B21E-E77F999D2AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoTask_Message_Recieve", "ToDoTask_Message_Recieve\ToDoTask_Message_Recieve.csproj", "{9E5F1B9D-594D-4379-9736-4EE2F769B661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoTask_Message_Recieve", "ToDoTask_Message_Recieve\ToDoTask_Message_Recieve.csproj", "{9E5F1B9D-594D-4379-9736-4EE2F769B661}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B5A49C6-D13C-45DF-84B3-8BC8DAE5D16F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
