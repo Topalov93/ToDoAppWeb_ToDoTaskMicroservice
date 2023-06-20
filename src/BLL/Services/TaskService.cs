@@ -1,6 +1,4 @@
 ﻿using Common;
-using DAL.Data;
-using DAL.Models;
 using DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,27 +9,37 @@ namespace ToDoApp.Services.TaskService
 {
     public class TaskService : ITaskService
     {
-        private readonly IToDoTaskRepository _toDoTaskRepository;
+        private readonly ITasksServiceRepository _toDoTaskRepository;
 
-        public TaskService(IToDoTaskRepository toDoTasksRepository)
+        public TaskService(ITasksServiceRepository toDoTasksRepository)
         {
             _toDoTaskRepository = toDoTasksRepository;
         }
 
+        public async Task<ToDoTask> GetTask(string taskId)
+        {
+            return await _toDoTaskRepository.GetAsync(taskId);
+        }
+
+        public async Task<List<ToDoTask>> GetTasks()
+        {
+            return await _toDoTaskRepository.GetAsync();
+        }
+
         public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskByTitle(newToDoTask.Title);
+            //ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskByTitle(newToDoTask.Title);
 
-            if (toDoTask is not null)
-            {
-                return new ResultState(false, Messages.ToDoTaskAlreadyExist);
-            }
+            //if (toDoTask is not null)
+            //{
+            //    return new ResultState(false, Messages.ToDoTaskAlreadyExist);
+            //}
 
             newToDoTask.IsCompleted = false;
 
             try
             {
-                await _toDoTaskRepository.CreateToDoTask(newToDoTask);
+                await _toDoTaskRepository.CreateAsync(newToDoTask);
                 return new ResultState(true, Messages.ToDoTaskCreationSuccessfull);
             }
             catch (Exception ex)
@@ -40,9 +48,9 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> DeleteTask(int taskId)
+        public async Task<ResultState> DeleteTask(string taskId)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
             if (toDoTask is null)
             {
@@ -51,7 +59,7 @@ namespace ToDoApp.Services.TaskService
 
             try
             {
-                await _toDoTaskRepository.DeleteToDoTask(taskId);
+                await _toDoTaskRepository.RemoveAsync(taskId);
                 return new ResultState(true, Messages.ToDoTaskDeletedSuccessfull);
             }
             catch (Exception ex)
@@ -60,9 +68,9 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> EditTask(int taskId, ToDoTask newInfoHolderToDoTask)
+        public async Task<ResultState> EditTask(string taskId, ToDoTask newInfoHolderToDoTask)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
             if (toDoTask is null)
             {
@@ -73,7 +81,7 @@ namespace ToDoApp.Services.TaskService
 
             try
             {
-                await _toDoTaskRepository.EditToDoTask(taskId, newInfoHolderToDoTask);
+                await _toDoTaskRepository.UpdateAsync(taskId, newInfoHolderToDoTask);
                 return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
             }
             catch (Exception ex)
@@ -82,9 +90,9 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> AssignTask(int taskId, int userId)
+        public async Task<ResultState> AssignTask(string taskId, int userId)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
             if (toDoTask is null)
             {
@@ -93,7 +101,7 @@ namespace ToDoApp.Services.TaskService
 
             try
             {
-                await _toDoTaskRepository.AssignToDoTask(taskId, userId);
+                //await _toDoTaskRepository.AssignToDoTask(taskId, userId);
                 return new ResultState(true, Messages.ToDoTaskAssignedSuccessful);
             }
             catch (Exception ex)
@@ -102,9 +110,9 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> CompleteTask(int taskId)
+        public async Task<ResultState> CompleteTask(string taskId)
         {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskById(taskId);
+            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
             if (toDoTask is null)
             {
@@ -118,7 +126,7 @@ namespace ToDoApp.Services.TaskService
 
             try
             {
-                await _toDoTaskRepository.CompleteToDoTask(taskId);
+                //await _toDoTaskRepository.CompleteToDoTask(taskId);
                 return new ResultState(true, Messages.ToDoTaskCompletedSuccessful);
             }
             catch (Exception ex)
@@ -126,42 +134,5 @@ namespace ToDoApp.Services.TaskService
                 return new ResultState(false, Messages.UnableToCompleteToDoTask, ex);
             }
         }
-
-        public async Task<ToDoTask> GetTaskByTitle(string title)
-        {
-            return await _toDoTaskRepository.GetToDoTaskByTitle(title);
-        }
-
-        public async Task<ToDoTask> GetTaskById(int taskId)
-        {
-            return await _toDoTaskRepository.GetToDoTaskById(taskId);
-        }
-
-        public async Task<List<ToDoTask>> GetTaskByUserId(int userId)
-        {
-            return await _toDoTaskRepository.GetToDoTaskByUserId(userId);
-        }
-
-        public async Task<ResultState> EditTaskUser(User newInfoHolderUser)
-        {
-            List<ToDoTask> toDoTasksToEdit = await _toDoTaskRepository.GetToDoTaskByUserId(newInfoHolderUser.Id);
-
-            if (toDoTasksToEdit.Count==0)
-            {
-                return new ResultState(false, Messages.ToDoTaskDoesntExist);
-            }
-
-            try
-            {
-                _toDoTaskRepository.EditToDoTaskUserInfo(toDoTasksToEdit, newInfoHolderUser);
-                return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
-            }
-            catch (Exception ex)
-            {
-                return new ResultState(false, Messages.UnableToEditToDoTask, ex);
-            }
-        }
-
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using DAL.Data;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ToDoApp.Models;
 using ToDoApp.Models.DTO.Requests;
@@ -22,9 +20,9 @@ namespace ToDoAppWeb.Controllers
 
         [HttpGet]
         [Route("{toDoTaskId}")]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> GetTaskById(int toDoTaskId)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> GetTaskById(string toDoTaskId)
         {
-            var toDoTask = await _toDoTaskService.GetTaskById(toDoTaskId);
+            var toDoTask = await _toDoTaskService.GetTask(toDoTaskId);
 
             if (toDoTask is null)
             {
@@ -38,10 +36,6 @@ namespace ToDoAppWeb.Controllers
                 Description = toDoTask.Description,
                 IsCompleted = toDoTask.IsCompleted,
                 AddedOn = toDoTask.AddedOn,
-                UserId = toDoTask.UserId,
-                UserUsername = toDoTask.UserUsername,
-                UserFirstname = toDoTask.UserFirstname,
-                UserLastname = toDoTask.UserLastname,
                 EditedOn = toDoTask.EditedOn,
                 EditedBy = toDoTask.EditedBy
             };
@@ -51,7 +45,7 @@ namespace ToDoAppWeb.Controllers
 
         [HttpPut]
         [Route("{toDoTaskId}/complete")]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> Complete(int toDoTaskId)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> Complete(string toDoTaskId)
         {
             var resultState = await _toDoTaskService.CompleteTask(toDoTaskId);
 
@@ -72,10 +66,6 @@ namespace ToDoAppWeb.Controllers
             {
                 Title = toDoTask.Title,
                 Description = toDoTask.Description,
-                UserId = toDoTask.UserId,
-                UserUsername = toDoTask.UserUsername,
-                UserFirstname = toDoTask.UserFirstname,
-                UserLastname = toDoTask.UserLastname
             };
 
             var resultState = await _toDoTaskService.CreateTask(toDoTaskToAdd);
@@ -93,7 +83,7 @@ namespace ToDoAppWeb.Controllers
 
         [HttpDelete]
         [Route("{toDoTaskId}")]
-        public async Task<ActionResult> Delete(int toDoTaskId)
+        public async Task<ActionResult> Delete(string toDoTaskId)
         {
             var resultState = await _toDoTaskService.DeleteTask(toDoTaskId);
 
@@ -110,7 +100,7 @@ namespace ToDoAppWeb.Controllers
 
         [HttpPut]
         [Route("{toDoTaskId}")]
-        public async Task<ActionResult> Edit(int toDoTaskId, ToDoTaskEditRequestDTO toDoTask)
+        public async Task<ActionResult> Edit(string toDoTaskId, ToDoTaskEditRequestDTO toDoTask)
         {
             ToDoTask todoTaskToEdit = new ToDoTask
             {
@@ -134,7 +124,7 @@ namespace ToDoAppWeb.Controllers
 
         [HttpPut]
         [Route("{toDoTaskId}/assign/user/{userId}")]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> AssignTask(int toDoTaskId, int userId)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> AssignTask(string toDoTaskId, int userId)
         {
             var resultState = await _toDoTaskService.AssignTask(toDoTaskId, userId);
 

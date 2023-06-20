@@ -1,41 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using DAL.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Text;
 
 namespace ToDoApp.Models
 {
     public class ToDoTask
     {
-        public int Id { get; set; }
+        public ToDoTask()
+        {
+              
+        }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
 
-        [Required]
-        [MaxLength(150)]
+        [BsonElement("title")]
         public string Title { get; set; }
 
-        [Required]
-        [MaxLength(500)]
+        [BsonElement("description")]
         public string Description { get; set; }
 
-        [Required]
+        [BsonElement("isCompleted")]
         public bool IsCompleted { get; set; }
 
-        [Required]
+        [BsonElement("addedOn")]
         public DateTime AddedOn { get; set; }
 
-        public int UserId { get; set; }
-
-        public string? UserUsername { get; set; }
-
-        public string? UserFirstname { get; set; }
-
-        public string? UserLastname { get; set; }
-
+        [BsonElement("EditedOn")]
         public DateTime? EditedOn { get; set; }
 
+        [BsonElement("EditedBy")]
         public int? EditedBy { get; set; }
 
-        //public virtual ICollection<UserToDoTask> AssignedUsers { get; set; }
+        [BsonIgnore]
+        public User User { get; set; }
 
         public override string ToString()
         {
@@ -45,7 +45,7 @@ namespace ToDoApp.Models
             sb.AppendLine($"Title: {Title}");
             sb.AppendLine($"Description: {Description}");
             sb.AppendLine($"Is Completed: {IsCompleted}");
-            sb.AppendLine($"Creator Id: {UserId}");
+            sb.AppendLine($"Creator Id: {User.Id}");
             sb.AppendLine($"Date Of Creation: {AddedOn}");
             sb.AppendLine($"Editor Id: {EditedBy}");
             sb.AppendLine($"Date Of Last Edit: {EditedOn}");

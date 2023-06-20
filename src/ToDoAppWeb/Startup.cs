@@ -1,12 +1,11 @@
-using DAL.Data;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ToDoApp.Models;
 using ToDoApp.Services.TaskService;
 using ToDoAppWeb.ExceptionHandler;
 
@@ -33,11 +32,12 @@ namespace ToDoAppWeb
             });
 
             //EFCore
-            services.AddDbContext<ToDoAppDbContext>(options => options.UseSqlServer("Data Source = .;Initial Catalog = ToDoAppdbWeb_ToDoTaskMicroservice;Integrated Security = True;TrustServerCertificate = False;"), ServiceLifetime.Singleton);
+            services.Configure<TaskServiceDatabaseSettings>(Configuration.GetSection("TaskServiceDatabase"));
 
-            services.AddTransient<IToDoTaskRepository, ToDoTasksRepository>();
+            services.AddTransient<ITasksServiceRepository, TaskServiceRepository>();
 
             services.AddTransient<ITaskService, TaskService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,13 +60,6 @@ namespace ToDoAppWeb
             {
                 endpoints.MapControllers();
             });
-
-            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            using (var serviceScope = serviceScopeFactory.CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetService<ToDoAppDbContext>();
-                dbContext.Database.EnsureCreated();
-            }
         }
     }
 }
