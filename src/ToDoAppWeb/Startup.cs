@@ -31,13 +31,11 @@ namespace ToDoAppWeb
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoAppWeb", Version = "v1" });
             });
 
-            //EFCore
             services.Configure<TaskServiceDatabaseSettings>(Configuration.GetSection("TaskServiceDatabase"));
 
             services.AddTransient<ITasksServiceRepository, TaskServiceRepository>();
 
             services.AddTransient<ITaskService, TaskService>();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
