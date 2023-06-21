@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using ToDoApp.Models;
 using ToDoApp.Services.TaskService;
 using ToDoAppWeb.ExceptionHandler;
+using ToDoAppWeb.KafkaConsumer;
+using ToDoAppWeb.KafkaProducer;
 
 namespace ToDoAppWeb
 {
@@ -36,6 +38,10 @@ namespace ToDoAppWeb
             services.AddTransient<ITasksServiceRepository, TaskServiceRepository>();
 
             services.AddTransient<ITaskService, TaskService>();
+
+            services.AddHostedService<Producer>();
+
+            services.AddHostedService<Consumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
