@@ -28,13 +28,6 @@ namespace ToDoApp.Services.TaskService
 
         public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
         {
-            //ToDoTask toDoTask = await _toDoTaskRepository.GetToDoTaskByTitle(newToDoTask.Title);
-
-            //if (toDoTask is not null)
-            //{
-            //    return new ResultState(false, Messages.ToDoTaskAlreadyExist);
-            //}
-
             newToDoTask.IsCompleted = false;
 
             try

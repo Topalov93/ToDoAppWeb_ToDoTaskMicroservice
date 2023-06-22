@@ -10,8 +10,9 @@ namespace ToDoApp.Models
     {
         public ToDoTask()
         {
-              
+
         }
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
@@ -28,30 +29,16 @@ namespace ToDoApp.Models
         [BsonElement("addedOn")]
         public DateTime AddedOn { get; set; }
 
+        [BsonElement("addedBy")]
+        public string AddedBy { get; set; }
+
         [BsonElement("EditedOn")]
         public DateTime? EditedOn { get; set; }
 
         [BsonElement("EditedBy")]
-        public int? EditedBy { get; set; }
+        public string EditedBy { get; set; }
 
         [BsonIgnore]
         public User User { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine($"Id: {Id}");
-            sb.AppendLine($"Title: {Title}");
-            sb.AppendLine($"Description: {Description}");
-            sb.AppendLine($"Is Completed: {IsCompleted}");
-            sb.AppendLine($"Creator Id: {User.Id}");
-            sb.AppendLine($"Date Of Creation: {AddedOn}");
-            sb.AppendLine($"Editor Id: {EditedBy}");
-            sb.AppendLine($"Date Of Last Edit: {EditedOn}");
-
-            return sb.ToString();
-        }
-
     }
 }

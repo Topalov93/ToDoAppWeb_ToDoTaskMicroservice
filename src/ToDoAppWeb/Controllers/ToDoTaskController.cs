@@ -37,7 +37,7 @@ namespace ToDoAppWeb.Controllers
                 IsCompleted = toDoTask.IsCompleted,
                 AddedOn = toDoTask.AddedOn,
                 EditedOn = toDoTask.EditedOn,
-                EditedBy = toDoTask.EditedBy
+                //EditedBy = toDoTask.EditedBy
             };
 
             return toDoTaskResponse;

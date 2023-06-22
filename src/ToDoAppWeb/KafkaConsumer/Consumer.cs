@@ -1,19 +1,27 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
-using System.Threading;
-using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using ToDoApp.Services.TaskService;
 
 namespace ToDoAppWeb.KafkaConsumer
 {
     public class Consumer : BackgroundService
     {
+        const string topic = "Users";
+        public ITaskService _toDoTaskService;
+
+        public Consumer(ITaskService taskService) : base()
+        {
+            _toDoTaskService = taskService;
+        }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            const string topic = "Users";
 
             CancellationTokenSource cts = new CancellationTokenSource();
             Console.CancelKeyPress += (_, e) =>
@@ -35,8 +43,9 @@ namespace ToDoAppWeb.KafkaConsumer
                 {
                     while (true)
                     {
-                        var cr = consumer.Consume(cts.Token);
-                        Console.WriteLine($"Consumed event from topic {topic} with key {cr.Message.Key,-10} and value {cr.Message.Value}");
+                        var message = consumer.Consume(cts.Token);
+                        ProceedMessage(message.Message.Value);
+                        Console.WriteLine($"Consumed event from topic {topic} with key {message.Message.Key,-10} and value {message.Message.Value}");
                     }
                 }
                 catch (OperationCanceledException)
@@ -49,6 +58,12 @@ namespace ToDoAppWeb.KafkaConsumer
                 }
                 return Task.CompletedTask;
             }
+        }
+
+        public void ProceedMessage(string message)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine();
         }
     }
 }
