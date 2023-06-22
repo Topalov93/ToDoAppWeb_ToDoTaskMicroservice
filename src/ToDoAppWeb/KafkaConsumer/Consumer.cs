@@ -20,7 +20,7 @@ namespace ToDoAppWeb.KafkaConsumer
             _toDoTaskService = taskService;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
 
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -39,24 +39,32 @@ namespace ToDoAppWeb.KafkaConsumer
                 settings).Build())
             {
                 consumer.Subscribe(topic);
-                try
+
+                using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+                while (await timer.WaitForNextTickAsync(stoppingToken))
                 {
-                    while (true)
+                    try
                     {
-                        var message = consumer.Consume(cts.Token);
-                        ProceedMessage(message.Message.Value);
-                        Console.WriteLine($"Consumed event from topic {topic} with key {message.Message.Key,-10} and value {message.Message.Value}");
+                        var message = consumer.Consume(10);
+
+                        if (message is null)
+                        {
+                            Console.WriteLine("No new messages on the topic");
+                            await Task.CompletedTask;
+                        }
+                        else
+                        {
+                            ProceedMessage(message.Message.Value);
+                            Console.WriteLine($"Consumed event from topic {topic} with key {message.Message.Key} and value {message.Message.Value}");
+                        }
                     }
+                    catch (OperationCanceledException)
+                    {
+                        // Ctrl-C was pressed.
+                    }
+                    continue;
                 }
-                catch (OperationCanceledException)
-                {
-                    // Ctrl-C was pressed.
-                }
-                finally
-                {
-                    consumer.Close();
-                }
-                return Task.CompletedTask;
+                await Task.CompletedTask;
             }
         }
 
