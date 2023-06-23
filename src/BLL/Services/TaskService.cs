@@ -29,6 +29,7 @@ namespace ToDoApp.Services.TaskService
         public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
         {
             newToDoTask.IsCompleted = false;
+            newToDoTask.AssignedTo = newToDoTask.AddedBy;
 
             try
             {
@@ -127,9 +128,9 @@ namespace ToDoApp.Services.TaskService
                 return new ResultState(false, Messages.UnableToCompleteToDoTask, ex);
             }
         }
-        public async Task<ToDoTask> GetTasksByUserId(string userId)
+        public async Task<List<ToDoTask>> GetTasksByUserId(string userId)
         {
-            return await _toDoTaskRepository.GetAsync(userId);
+            return await _toDoTaskRepository.GetbyUserIdAsync(userId);
         }
 
     }

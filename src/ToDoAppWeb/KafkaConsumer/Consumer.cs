@@ -1,9 +1,12 @@
 ﻿using Confluent.Kafka;
+using DAL.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using ToDoApp.Models;
@@ -71,9 +74,12 @@ namespace ToDoAppWeb.KafkaConsumer
 
         public void ProceedMessage(string message)
         {
+            var user = JsonConvert.DeserializeObject<User>(message);
+
             try
             {
-                //_toDoTaskService.GetTasksByUserId(message.UserId)
+                var tasks = _toDoTaskService.GetTasksByUserId(user.Id);
+                Console.WriteLine();
             }
             catch (Exception)
             {

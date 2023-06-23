@@ -30,7 +30,7 @@ namespace ToDoApp.Models
         public DateTime AddedOn { get; set; }
 
         [BsonElement("addedBy")]
-        public string AddedBy { get; set; }
+        public User AddedBy { get; set; } = new User();
 
         [BsonElement("EditedOn")]
         public DateTime? EditedOn { get; set; }
@@ -39,6 +39,6 @@ namespace ToDoApp.Models
         public string EditedBy { get; set; }
 
         [BsonIgnore]
-        public User User { get; set; }
+        public User AssignedTo { get; set; }  = new User();
     }
 }

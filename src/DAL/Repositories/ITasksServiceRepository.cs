@@ -15,5 +15,7 @@ namespace DAL.Repositories
         public Task UpdateAsync(string id, ToDoTask updatedBook);
 
         public Task RemoveAsync(string id);
+
+        public Task<List<ToDoTask>> GetbyUserIdAsync(string userId);
     }
 }

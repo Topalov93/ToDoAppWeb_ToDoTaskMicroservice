@@ -20,5 +20,7 @@ namespace ToDoApp.Services.TaskService
         public Task<ResultState> AssignTask(string taskId, int userId);
 
         public Task<ResultState> CompleteTask(string taskId);
+
+        public  Task<List<ToDoTask>> GetTasksByUserId(string userId);
     }
 }
