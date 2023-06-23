@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using ToDoApp.Models;
 using ToDoApp.Services.TaskService;
 
 namespace ToDoAppWeb.KafkaConsumer
@@ -70,8 +71,29 @@ namespace ToDoAppWeb.KafkaConsumer
 
         public void ProceedMessage(string message)
         {
-            Console.WriteLine(message);
-            Console.WriteLine();
+            try
+            {
+                //_toDoTaskService.GetTasksByUserId(message.UserId)
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<ToDoTask> GetUserTodoTasks()
+        {
+            try
+            {
+                //_toDoTaskService.
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return new List<ToDoTask>();
         }
     }
 }

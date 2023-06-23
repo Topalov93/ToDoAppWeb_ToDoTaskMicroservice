@@ -127,5 +127,10 @@ namespace ToDoApp.Services.TaskService
                 return new ResultState(false, Messages.UnableToCompleteToDoTask, ex);
             }
         }
+        public async Task<ToDoTask> GetTasksByUserId(string userId)
+        {
+            return await _toDoTaskRepository.GetAsync(userId);
+        }
+
     }
 }
