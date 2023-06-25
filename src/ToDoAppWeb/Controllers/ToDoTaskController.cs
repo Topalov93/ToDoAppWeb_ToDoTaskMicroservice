@@ -66,6 +66,7 @@ namespace ToDoAppWeb.Controllers
             {
                 Title = toDoTask.Title,
                 Description = toDoTask.Description,
+                AddedBy = new DAL.Models.User() { Id = "1" }
             };
 
             var resultState = await _toDoTaskService.CreateTask(toDoTaskToAdd);

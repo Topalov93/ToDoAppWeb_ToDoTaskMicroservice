@@ -1,4 +1,5 @@
 ﻿using Common;
+using DAL.Models;
 using DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -133,5 +134,23 @@ namespace ToDoApp.Services.TaskService
             return await _toDoTaskRepository.GetbyUserIdAsync(userId);
         }
 
+        public async Task<ResultState> UpdateUserInfo(List<ToDoTask> toDoTasks, User userInfo)
+        {
+            foreach (var toDoTask in toDoTasks)
+            {
+                toDoTask.AssignedTo = userInfo;
+
+                try
+                {
+                    await _toDoTaskRepository.UpdateAsync(toDoTask.Id, toDoTask);
+                }
+                catch (Exception ex)
+                {
+                    return new ResultState(false, Messages.UnableToEditToDoTask, ex);
+                }
+            }
+
+            return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
+        }
     }
 }

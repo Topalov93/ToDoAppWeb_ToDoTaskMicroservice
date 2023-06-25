@@ -32,13 +32,13 @@ namespace ToDoApp.Models
         [BsonElement("addedBy")]
         public User AddedBy { get; set; } = new User();
 
-        [BsonElement("EditedOn")]
+        [BsonElement("editedOn")]
         public DateTime? EditedOn { get; set; }
 
-        [BsonElement("EditedBy")]
-        public string EditedBy { get; set; }
+        [BsonElement("editedBy")]
+        public User EditedBy { get; set; } = new User();
 
-        [BsonIgnore]
+        [BsonElement("assignedTo")]
         public User AssignedTo { get; set; }  = new User();
     }
 }

@@ -72,34 +72,29 @@ namespace ToDoAppWeb.KafkaConsumer
             }
         }
 
-        public void ProceedMessage(string message)
+        public async void ProceedMessage(string message)
         {
             var user = JsonConvert.DeserializeObject<User>(message);
 
             try
             {
-                var tasks = _toDoTaskService.GetTasksByUserId(user.Id);
-                Console.WriteLine();
+                var tasks = await _toDoTaskService.GetTasksByUserId(user.Id);
+
+                try
+                {
+                    await _toDoTaskService.UpdateUserInfo(tasks, user);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
 
                 throw;
             }
-        }
-
-        public List<ToDoTask> GetUserTodoTasks()
-        {
-            try
-            {
-                //_toDoTaskService.
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return new List<ToDoTask>();
         }
     }
 }
