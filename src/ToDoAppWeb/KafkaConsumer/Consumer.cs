@@ -75,20 +75,22 @@ namespace ToDoAppWeb.KafkaConsumer
         public async void ProceedMessage(string message)
         {
             var user = JsonConvert.DeserializeObject<User>(message);
+            var tasks = new List<ToDoTask>();
 
             try
             {
-                var tasks = await _toDoTaskService.GetTasksByUserId(user.Id);
+                tasks = await _toDoTaskService.GetTasksByUserId(user.Id);
 
-                try
-                {
-                    await _toDoTaskService.UpdateUserInfo(tasks, user);
-                }
-                catch (Exception)
-                {
+            }
+            catch (Exception)
+            {
 
-                    throw;
-                }
+                throw;
+            }
+
+            try
+            {
+                await _toDoTaskService.UpdateUserInfo(tasks, user);
             }
             catch (Exception)
             {
