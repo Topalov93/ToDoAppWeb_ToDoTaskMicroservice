@@ -1,22 +1,21 @@
 ﻿using Confluent.Kafka;
+using DAL.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
-using System.Threading.Tasks;
-using System.Threading;
-using Amazon.Util.Internal.PlatformServices;
 using System.Collections.Generic;
 using System.IO;
-using DAL.Models;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using Newtonsoft.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using ToDoApp.Models;
 
 namespace ToDoAppWeb.KafkaProducer
 {
     public class EventProducer : BackgroundService
     {
         const string topic = "TodoTasks";
-        public User Message = null;
+        public ToDoTask Message = null;
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -29,7 +28,6 @@ namespace ToDoAppWeb.KafkaProducer
                 settings).Build())
             {
                 var message = GenerateMessage();
-                var numProduced = 0;
 
                 if (message is null) return Task.CompletedTask;
 
@@ -43,12 +41,10 @@ namespace ToDoAppWeb.KafkaProducer
                         else
                         {
                             Console.WriteLine(message.Value);
-                            numProduced += 1;
                         }
                     });
 
                 producer.Flush(TimeSpan.FromSeconds(10));
-                Console.WriteLine($"{numProduced} messages were produced to topic {topic}");
                 return Task.CompletedTask;
             }
         }
@@ -59,22 +55,22 @@ namespace ToDoAppWeb.KafkaProducer
 
             if (rawMessage is null) return null;
 
-            var user = new User()
+            var task = new ToDoTask()
             {
                 Id = rawMessage.Id,
-                FirstName = rawMessage.FirstName,
-                LastName = rawMessage.LastName,
-                Email = rawMessage.Email,
-                Role = rawMessage.Role,
+                Title = rawMessage.Title,
+                Description = rawMessage.Description,
+                AssignedTo = rawMessage.AssignedTo,
+                IsCompleted = rawMessage.IsCompleted,
             };
 
-            var userAsJson = JsonConvert.SerializeObject(user);
-            var message = new Message<string, string> { Key = "", Value = userAsJson };
+            var taskAsJson = JsonConvert.SerializeObject(task);
+            var message = new Message<string, string> { Key = "", Value = taskAsJson };
 
             return message;
         }
 
-        public Task Produce(string userId, User rawMessage)
+        public Task Produce(string userId, ToDoTask rawMessage)
         {
             Message = rawMessage;
             Message.Id = userId;

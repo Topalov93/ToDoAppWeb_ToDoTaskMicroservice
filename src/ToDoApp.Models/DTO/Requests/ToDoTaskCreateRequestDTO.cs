@@ -23,5 +23,6 @@ namespace ToDoApp.Models.DTO.Requests
         public string Description { get; set; }
 
         public bool IsCompleted { get; set; }
+
     }
 }

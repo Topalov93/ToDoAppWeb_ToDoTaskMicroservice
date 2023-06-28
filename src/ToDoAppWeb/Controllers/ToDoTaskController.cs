@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ToDoApp.Models;
 using ToDoApp.Models.DTO.Requests;
 using ToDoApp.Models.DTO.Responses;
 using ToDoApp.Services.TaskService;
+using ToDoAppWeb.KafkaProducer;
 
 namespace ToDoAppWeb.Controllers
 {
@@ -105,6 +107,7 @@ namespace ToDoAppWeb.Controllers
         {
             ToDoTask todoTaskToEdit = new ToDoTask
             {
+                Id = toDoTaskId,
                 Title = toDoTask.Title,
                 Description = toDoTask.Description,
                 IsCompleted = toDoTask.IsCompleted,
@@ -114,7 +117,15 @@ namespace ToDoAppWeb.Controllers
 
             if (resultState.IsSuccessful)
             {
-
+                try
+                {
+                    var producer = new EventProducer();
+                    await producer.Produce(toDoTaskId, todoTaskToEdit);
+                }
+                catch (System.Exception)
+                {
+                    throw;
+                }
                 return Ok(resultState.Message);
             }
             else

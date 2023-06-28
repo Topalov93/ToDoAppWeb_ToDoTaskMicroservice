@@ -14,12 +14,12 @@ using ToDoApp.Services.TaskService;
 
 namespace ToDoAppWeb.KafkaConsumer
 {
-    public class Consumer : BackgroundService
+    public class EventConsumer : BackgroundService
     {
         const string topic = "Users";
         public ITaskService _toDoTaskService;
 
-        public Consumer(ITaskService taskService) : base()
+        public EventConsumer(ITaskService taskService) : base()
         {
             _toDoTaskService = taskService;
         }
