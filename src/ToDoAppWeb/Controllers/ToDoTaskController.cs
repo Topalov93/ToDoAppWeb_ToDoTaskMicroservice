@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToDoApp.Models;
 using ToDoApp.Models.DTO.Requests;
@@ -43,6 +44,27 @@ namespace ToDoAppWeb.Controllers
             };
 
             return toDoTaskResponse;
+        }
+
+        [HttpGet]
+        [Route("backlog")]
+        public async Task<ActionResult<List<ToDoTaskBacklogResponseDTO>>> GetTasksBacklog()
+        {
+            var tasksBacklog = await _toDoTaskService.GetTasksBacklog();
+
+            var response = new List<ToDoTaskBacklogResponseDTO>();
+
+            foreach (var todotask in tasksBacklog)
+            {
+                response.Add(new ToDoTaskBacklogResponseDTO()
+                {
+                    Id = todotask.Id,
+                    Title = todotask.Title,
+                    IsCompleted = todotask.IsCompleted
+                });
+            }
+
+            return response;
         }
 
         [HttpPut]

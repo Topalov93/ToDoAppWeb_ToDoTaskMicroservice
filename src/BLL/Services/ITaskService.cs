@@ -25,5 +25,7 @@ namespace ToDoApp.Services.TaskService
         public  Task<List<ToDoTask>> GetTasksByUserId(string userId);
 
         public Task<ResultState> UpdateUserInfo(List<ToDoTask> toDoTasks, User userInfo);
+
+        public Task<List<ToDoTask>> GetTasksBacklog();
     }
 }

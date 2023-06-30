@@ -40,5 +40,8 @@ namespace DAL.Repositories
 
         public async Task<List<ToDoTask>> GetbyUserIdAsync(string userId) =>
             await _toDoTasks.Find(x => x.AssignedTo.Id == userId).ToListAsync();
+
+        public async Task<List<ToDoTask>> GetTasksBacklogAsync() =>
+            await _toDoTasks.Find(x => x.IsBacklog == true).ToListAsync();
     }
 }

@@ -152,5 +152,10 @@ namespace ToDoApp.Services.TaskService
 
             return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
         }
+
+        public async Task<List<ToDoTask>> GetTasksBacklog()
+        {
+            return await _toDoTaskRepository.GetTasksBacklogAsync();
+        }
     }
 }

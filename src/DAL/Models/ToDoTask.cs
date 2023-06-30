@@ -26,6 +26,9 @@ namespace ToDoApp.Models
         [BsonElement("isCompleted")]
         public bool IsCompleted { get; set; }
 
+        [BsonElement("isTodoListFree")]
+        public bool IsBacklog { get; set; } = true;
+
         [BsonElement("addedOn")]
         public DateTime AddedOn { get; set; }
 
