@@ -1,5 +1,4 @@
-﻿using DAL.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToDoApp.Models;
@@ -133,6 +132,7 @@ namespace ToDoAppWeb.Controllers
                 Title = toDoTask.Title,
                 Description = toDoTask.Description,
                 IsCompleted = toDoTask.IsCompleted,
+                AddedOn = System.DateTime.Now,
             };
 
             var resultState = await _toDoTaskService.EditTask(toDoTaskId, todoTaskToEdit);

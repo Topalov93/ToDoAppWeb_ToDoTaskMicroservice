@@ -3,6 +3,7 @@ using DAL.Models;
 using DAL.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ToDoApp.Models;
 
@@ -129,6 +130,7 @@ namespace ToDoApp.Services.TaskService
                 return new ResultState(false, Messages.UnableToCompleteToDoTask, ex);
             }
         }
+
         public async Task<List<ToDoTask>> GetTasksByUserId(string userId)
         {
             return await _toDoTaskRepository.GetbyUserIdAsync(userId);
@@ -156,6 +158,60 @@ namespace ToDoApp.Services.TaskService
         public async Task<List<ToDoTask>> GetTasksBacklog()
         {
             return await _toDoTaskRepository.GetTasksBacklogAsync();
+        }
+
+        public async Task<ResultState> AddTaskToList(string toDoTaskId, string toDoListId)
+        {
+            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(toDoListId);
+
+            if (toDoTask is null)
+            {
+                return new ResultState(false, "ToDoTask doesn't exist");
+            }
+
+            var lists = await GetToDoLists();
+            if (lists is null) return new ResultState(false, "Unsuccessful fetching of ToDo Lists");
+
+            var todoList = lists.Find(x => x.Id == toDoTaskId);
+            if (todoList is null) return new ResultState(false, "Unsuccessful list pick");
+
+            try
+            {
+                //await _toDoListRepository.UpdateAsync(toDoListId, toDoTask);
+                return new ResultState(true, "Successful");
+            }
+            catch (Exception ex)
+            {
+                return new ResultState(false, "Unable to add task to ToDoList", ex);
+            }
+        }
+
+        public async Task<List<ToDoList>> GetToDoLists()
+        {
+            using var client = new HttpClient();
+            List<ToDoList> toDoLists = new List<ToDoList>();
+            HttpResponseMessage response = new HttpResponseMessage();
+
+            try
+            {
+                response = await client.GetAsync("http://localhost:5002/api/ToDoList");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                var toDoListsAsString = await response.Content.ReadAsStringAsync();
+                toDoLists = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ToDoList>>(toDoListsAsString);
+            }
+            else
+            {
+                await Console.Out.WriteLineAsync(response.Content.ToString());
+            }
+
+            return toDoLists;
         }
     }
 }

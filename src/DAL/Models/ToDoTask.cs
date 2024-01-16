@@ -2,7 +2,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Text;
 
 namespace ToDoApp.Models
 {
@@ -24,7 +23,7 @@ namespace ToDoApp.Models
         public string Description { get; set; }
 
         [BsonElement("isCompleted")]
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; set; } = false;
 
         [BsonElement("isTodoListFree")]
         public bool IsBacklog { get; set; } = true;
@@ -36,7 +35,7 @@ namespace ToDoApp.Models
         public User AddedBy { get; set; } = new User();
 
         [BsonElement("editedOn")]
-        public DateTime? EditedOn { get; set; }
+        public DateTime? EditedOn { get; set; } = new DateTime();
 
         [BsonElement("editedBy")]
         public User EditedBy { get; set; } = new User();
