@@ -8,24 +8,22 @@ namespace ToDoApp.Services.TaskService
 {
     public interface ITaskService
     {
-        public Task<ToDoTask> GetTask(string taskId);
+        public Task<ToDoTask> GetbyId(string taskId);
 
-        public Task<List<ToDoTask>> GetTasks();
+        public Task<List<ToDoTask>> GetAll();
 
-        public Task<ResultState> CreateTask(ToDoTask newToDoTask);
+        public Task<ResultState> Create(ToDoTask newToDoTask);
 
-        public Task<ResultState> DeleteTask(string taskId);
+        public Task<ResultState> Delete(string taskId);
 
-        public Task<ResultState> EditTask(string taskId, ToDoTask newInfoHolderToDoTask);
+        public Task<ResultState> Edit(string taskId, ToDoTask newInfoHolderToDoTask);
 
         public Task<ResultState> AssignTask(string taskId, int userId);
 
         public Task<ResultState> CompleteTask(string taskId);
 
-        public  Task<List<ToDoTask>> GetTasksByUserId(string userId);
-
         public Task<ResultState> UpdateUserInfo(List<ToDoTask> toDoTasks, User userInfo);
 
-        public Task<List<ToDoTask>> GetTasksBacklog();
+        public Task<List<ToDoTask>> GetBacklog();
     }
 }

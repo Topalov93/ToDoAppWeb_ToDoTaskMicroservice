@@ -17,18 +17,7 @@ namespace ToDoApp.Services.TaskService
         {
             _toDoTaskRepository = toDoTasksRepository;
         }
-
-        public async Task<ToDoTask> GetTask(string taskId)
-        {
-            return await _toDoTaskRepository.GetAsync(taskId);
-        }
-
-        public async Task<List<ToDoTask>> GetTasks()
-        {
-            return await _toDoTaskRepository.GetAsync();
-        }
-
-        public async Task<ResultState> CreateTask(ToDoTask newToDoTask)
+        public async Task<ResultState> Create(ToDoTask newToDoTask)
         {
             newToDoTask.IsCompleted = false;
             newToDoTask.AssignedTo = newToDoTask.AddedBy;
@@ -44,7 +33,40 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> DeleteTask(string taskId)
+        public async Task<ToDoTask> GetbyId(string taskId)
+        {
+            return await _toDoTaskRepository.GetAsync(taskId);
+        }
+
+        public async Task<List<ToDoTask>> GetAll()
+        {
+            return await _toDoTaskRepository.GetAsync();
+        }
+        public async Task<List<ToDoTask>> GetBacklog()
+        {
+            var toDoTask = await _toDoTaskRepository.GetAsync();
+            var backlog = new List<ToDoTask>();
+
+            try
+            {
+                foreach (var task in toDoTask)
+                {
+                    if (task.AssignedTo is null)
+                    {
+                        backlog.Add(task);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return backlog;
+        }
+
+        public async Task<ResultState> Delete(string taskId)
         {
             ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
@@ -64,7 +86,7 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<ResultState> EditTask(string taskId, ToDoTask newInfoHolderToDoTask)
+        public async Task<ResultState> Edit(string taskId, ToDoTask newInfoHolderToDoTask)
         {
             ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(taskId);
 
@@ -131,87 +153,98 @@ namespace ToDoApp.Services.TaskService
             }
         }
 
-        public async Task<List<ToDoTask>> GetTasksByUserId(string userId)
-        {
-            return await _toDoTaskRepository.GetbyUserIdAsync(userId);
-        }
-
         public async Task<ResultState> UpdateUserInfo(List<ToDoTask> toDoTasks, User userInfo)
         {
-            foreach (var toDoTask in toDoTasks)
+            if (userInfo.FullName == "" &&
+                userInfo.Email == "")
             {
-                toDoTask.AssignedTo = userInfo;
+                foreach (var toDoTask in toDoTasks)
+                {
+                    toDoTask.AssignedTo = null;
 
-                try
-                {
-                    await _toDoTaskRepository.UpdateAsync(toDoTask.Id, toDoTask);
+                    try
+                    {
+                        await _toDoTaskRepository.UpdateAsync(toDoTask.Id, toDoTask);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ResultState(false, Messages.UnableToEditToDoTask, ex);
+                    }
                 }
-                catch (Exception ex)
+            }
+            else
+            {
+                foreach (var toDoTask in toDoTasks)
                 {
-                    return new ResultState(false, Messages.UnableToEditToDoTask, ex);
+                    toDoTask.AssignedTo = userInfo;
+
+                    try
+                    {
+                        await _toDoTaskRepository.UpdateAsync(toDoTask.Id, toDoTask);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ResultState(false, Messages.UnableToEditToDoTask, ex);
+                    }
                 }
             }
 
             return new ResultState(true, Messages.ToDoTaskEditSuccessfull);
         }
 
-        public async Task<List<ToDoTask>> GetTasksBacklog()
-        {
-            return await _toDoTaskRepository.GetTasksBacklogAsync();
-        }
 
-        public async Task<ResultState> AddTaskToList(string toDoTaskId, string toDoListId)
-        {
-            ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(toDoListId);
+        //public async Task<ResultState> AddTaskToList(string toDoTaskId, string toDoListId)
+        //{
+        //    ToDoTask toDoTask = await _toDoTaskRepository.GetAsync(toDoListId);
 
-            if (toDoTask is null)
-            {
-                return new ResultState(false, "ToDoTask doesn't exist");
-            }
+        //    if (toDoTask is null)
+        //    {
+        //        return new ResultState(false, "ToDoTask doesn't exist");
+        //    }
 
-            var lists = await GetToDoLists();
-            if (lists is null) return new ResultState(false, "Unsuccessful fetching of ToDo Lists");
+        //    var lists = await GetToDoLists();
+        //    if (lists is null) return new ResultState(false, "Unsuccessful fetching of ToDo Lists");
 
-            var todoList = lists.Find(x => x.Id == toDoTaskId);
-            if (todoList is null) return new ResultState(false, "Unsuccessful list pick");
+        //    var todoList = lists.Find(x => x.Id == toDoTaskId);
+        //    if (todoList is null) return new ResultState(false, "Unsuccessful list pick");
 
-            try
-            {
-                //await _toDoListRepository.UpdateAsync(toDoListId, toDoTask);
-                return new ResultState(true, "Successful");
-            }
-            catch (Exception ex)
-            {
-                return new ResultState(false, "Unable to add task to ToDoList", ex);
-            }
-        }
+        //    try
+        //    {
+        //        //await _toDoListRepository.UpdateAsync(toDoListId, toDoTask);
+        //        return new ResultState(true, "Successful");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResultState(false, "Unable to add task to ToDoList", ex);
+        //    }
+        //}
 
-        public async Task<List<ToDoList>> GetToDoLists()
-        {
-            using var client = new HttpClient();
-            List<ToDoList> toDoLists = new List<ToDoList>();
-            HttpResponseMessage response = new HttpResponseMessage();
+        //public async Task<List<ToDoList>> GetToDoLists()
+        //{
+        //    using var client = new HttpClient();
+        //    List<ToDoList> toDoLists = new List<ToDoList>();
+        //    HttpResponseMessage response = new HttpResponseMessage();
 
-            try
-            {
-                response = await client.GetAsync("http://localhost:5002/api/ToDoList");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+        //    try
+        //    {
+        //        response = await client.GetAsync("http://localhost:5002/api/ToDoList");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
 
-            if (response.IsSuccessStatusCode)
-            {
-                var toDoListsAsString = await response.Content.ReadAsStringAsync();
-                toDoLists = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ToDoList>>(toDoListsAsString);
-            }
-            else
-            {
-                await Console.Out.WriteLineAsync(response.Content.ToString());
-            }
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var toDoListsAsString = await response.Content.ReadAsStringAsync();
+        //        toDoLists = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ToDoList>>(toDoListsAsString);
+        //    }
+        //    else
+        //    {
+        //        await Console.Out.WriteLineAsync(response.Content.ToString());
+        //    }
 
-            return toDoLists;
-        }
+        //    return toDoLists;
+        //}
     }
 }

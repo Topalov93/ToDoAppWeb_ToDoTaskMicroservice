@@ -2,6 +2,7 @@
 using DAL.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ToDoAppWeb.KafkaConsumer
 {
     public class EventConsumer : BackgroundService
     {
-        const string topic = "Users";
+        const string topic = "users";
         public ITaskService _toDoTaskService;
 
         public EventConsumer(ITaskService taskService) : base()
@@ -79,8 +80,7 @@ namespace ToDoAppWeb.KafkaConsumer
 
             try
             {
-                tasks = await _toDoTaskService.GetTasksByUserId(user.Id);
-
+                //tasks = await _toDoTaskService.GetTasksByUserId(user.Id);
             }
             catch (Exception)
             {
@@ -97,6 +97,7 @@ namespace ToDoAppWeb.KafkaConsumer
 
                 throw;
             }
+
         }
     }
 }

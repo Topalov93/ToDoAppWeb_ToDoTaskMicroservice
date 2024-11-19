@@ -22,6 +22,8 @@ namespace DAL.Repositories
             _toDoTasks = mongoDatabase.GetCollection<ToDoTask>(
                 taskServiceDatabaseSettings.Value.TasksCollectionName);
         }
+        public async Task CreateAsync(ToDoTask newTask) =>
+            await _toDoTasks.InsertOneAsync(newTask);
 
         public async Task<List<ToDoTask>> GetAsync() =>
             await _toDoTasks.Find(_ => true).ToListAsync();
@@ -29,11 +31,8 @@ namespace DAL.Repositories
         public async Task<ToDoTask?> GetAsync(string id) =>
             await _toDoTasks.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(ToDoTask newBook) =>
-            await _toDoTasks.InsertOneAsync(newBook);
-
-        public async Task UpdateAsync(string id, ToDoTask updatedBook) =>
-            await _toDoTasks.ReplaceOneAsync(x => x.Id == id, updatedBook);
+        public async Task UpdateAsync(string id, ToDoTask updatedTask) =>
+            await _toDoTasks.ReplaceOneAsync(x => x.Id == id, updatedTask);
 
         public async Task RemoveAsync(string id) =>
             await _toDoTasks.DeleteOneAsync(x => x.Id == id);
@@ -41,7 +40,7 @@ namespace DAL.Repositories
         public async Task<List<ToDoTask>> GetbyUserIdAsync(string userId) =>
             await _toDoTasks.Find(x => x.AssignedTo.Id == userId).ToListAsync();
 
-        public async Task<List<ToDoTask>> GetTasksBacklogAsync() =>
+        public async Task<List<ToDoTask>> GetBacklogAsync() =>
             await _toDoTasks.Find(x => x.IsBacklog == true).ToListAsync();
     }
 }

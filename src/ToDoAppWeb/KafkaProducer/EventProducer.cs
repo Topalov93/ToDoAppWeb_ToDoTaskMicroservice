@@ -14,7 +14,7 @@ namespace ToDoAppWeb.KafkaProducer
 {
     public class EventProducer : BackgroundService
     {
-        const string topic = "TodoTasks";
+        const string topic = "todoTasks";
         public ToDoTask Message = null;
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

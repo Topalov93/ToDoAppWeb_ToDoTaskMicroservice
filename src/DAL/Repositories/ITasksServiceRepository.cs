@@ -18,6 +18,6 @@ namespace DAL.Repositories
 
         public Task<List<ToDoTask>> GetbyUserIdAsync(string userId);
 
-        public Task<List<ToDoTask>> GetTasksBacklogAsync();
+        public Task<List<ToDoTask>> GetBacklogAsync();
     }
 }

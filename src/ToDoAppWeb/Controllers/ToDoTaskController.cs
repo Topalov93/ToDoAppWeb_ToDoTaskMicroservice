@@ -22,9 +22,9 @@ namespace ToDoAppWeb.Controllers
 
         [HttpGet]
         [Route("{toDoTaskId}")]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> GetTaskById(string toDoTaskId)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> GetById(string toDoTaskId)
         {
-            var toDoTask = await _toDoTaskService.GetTask(toDoTaskId);
+            var toDoTask = await _toDoTaskService.GetbyId(toDoTaskId);
 
             if (toDoTask is null)
             {
@@ -47,9 +47,9 @@ namespace ToDoAppWeb.Controllers
 
         [HttpGet]
         [Route("backlog")]
-        public async Task<ActionResult<List<ToDoTaskBacklogResponseDTO>>> GetTasksBacklog()
+        public async Task<ActionResult<List<ToDoTaskBacklogResponseDTO>>> GetBacklog()
         {
-            var tasksBacklog = await _toDoTaskService.GetTasksBacklog();
+            var tasksBacklog = await _toDoTaskService.GetBacklog();
 
             var response = new List<ToDoTaskBacklogResponseDTO>();
 
@@ -83,7 +83,7 @@ namespace ToDoAppWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> Post(ToDoTaskCreateRequestDTO toDoTask)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> Create(ToDoTaskCreateRequestDTO toDoTask)
         {
             ToDoTask toDoTaskToAdd = new ToDoTask
             {
@@ -92,7 +92,7 @@ namespace ToDoAppWeb.Controllers
                 AddedBy = new DAL.Models.User() { Id = "1" }
             };
 
-            var resultState = await _toDoTaskService.CreateTask(toDoTaskToAdd);
+            var resultState = await _toDoTaskService.Create(toDoTaskToAdd);
 
             if (resultState.IsSuccessful)
             {
@@ -109,7 +109,7 @@ namespace ToDoAppWeb.Controllers
         [Route("{toDoTaskId}")]
         public async Task<ActionResult> Delete(string toDoTaskId)
         {
-            var resultState = await _toDoTaskService.DeleteTask(toDoTaskId);
+            var resultState = await _toDoTaskService.Delete(toDoTaskId);
 
             if (resultState.IsSuccessful)
             {
@@ -135,7 +135,7 @@ namespace ToDoAppWeb.Controllers
                 AddedOn = System.DateTime.Now,
             };
 
-            var resultState = await _toDoTaskService.EditTask(toDoTaskId, todoTaskToEdit);
+            var resultState = await _toDoTaskService.Edit(toDoTaskId, todoTaskToEdit);
 
             if (resultState.IsSuccessful)
             {
@@ -158,7 +158,7 @@ namespace ToDoAppWeb.Controllers
 
         [HttpPut]
         [Route("{toDoTaskId}/assign/user/{userId}")]
-        public async Task<ActionResult<ToDoTaskResponseDTO>> AssignTask(string toDoTaskId, int userId)
+        public async Task<ActionResult<ToDoTaskResponseDTO>> Assign(string toDoTaskId, int userId)
         {
             var resultState = await _toDoTaskService.AssignTask(toDoTaskId, userId);
 
